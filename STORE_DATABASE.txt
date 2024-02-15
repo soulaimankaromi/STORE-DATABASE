@@ -1,0 +1,114 @@
+Enter password: *********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| centre_formation   |
+| information_schema |
+| isgi               |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+6 rows in set (0.04 sec)
+
+mysql> create database onligne;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use onligne;
+Database changed
+mysql> create table clients(
+    -> id_client int primary key,
+    -> nom_client varchar(15),
+    -> prenom_client varchar(15),
+    -> email_client varchar(30),
+    -> telephone_client int(20))
+    -> ;
+Query OK, 0 rows affected, 1 warning (0.05 sec)
+
+mysql> create table produits(
+    -> id_produit int primary key,
+    -> nom_produit varchar(20),
+    -> description_produit varchar(50),
+    -> prix_produit float,
+    -> stock_produit int);
+Query OK, 0 rows affected (0.04 sec)
+mysql> create table commandes(
+    -> id_commande int primary key,
+    -> id_client int references clients(id_client),
+    -> order_date date,
+    -> status_commande varchar(20),
+    -> total_commande int);
+Query OK, 0 rows affected (0.04 sec)
+mysql> desc commandes;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| id_commande     | int         | NO   | PRI | NULL    |       |
+| id_client       | int         | YES  |     | NULL    |       |
+| order_date      | date        | YES  |     | NULL    |       |
+| status_commande | varchar(20) | YES  |     | NULL    |       |
+| total_commande  | int         | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+5 rows in set (0.02 sec)
+
+mysql> alter table commandes
+    -> add foreign key (id_client) references clients(id_client);
+Query OK, 0 rows affected (0.12 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+mysql> desc commandes;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| id_commande     | int         | NO   | PRI | NULL    |       |
+| id_client       | int         | YES  | MUL | NULL    |       |
+| order_date      | date        | YES  |     | NULL    |       |
+| status_commande | varchar(20) | YES  |     | NULL    |       |
+| total_commande  | int         | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+mysql> alter table commandes
+    -> add CHECK (status_commande IN ('in progress', 'delivered', 'canceled'));
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc commandes;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| id_commande     | int         | NO   | PRI | NULL    |       |
+| id_client       | int         | YES  | MUL | NULL    |       |
+| order_date      | date        | YES  |     | NULL    |       |
+| status_commande | varchar(20) | YES  |     | NULL    |       |
+| total_commande  | int         | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> alter table commandes
+    -> alter status_commande set default 'en cours';
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc commandes;
++-----------------+-------------+------+-----+----------+-------+
+| Field           | Type        | Null | Key | Default  | Extra |
++-----------------+-------------+------+-----+----------+-------+
+| id_commande     | int         | NO   | PRI | NULL     |       |
+| id_client       | int         | YES  | MUL | NULL     |       |
+| order_date      | date        | YES  |     | NULL     |       |
+| status_commande | varchar(20) | YES  |     | en cours |       |
+| total_commande  | int         | YES  |     | NULL     |       |
++-----------------+-------------+------+-----+----------+-------+
+5 rows in set (0.00 sec)
